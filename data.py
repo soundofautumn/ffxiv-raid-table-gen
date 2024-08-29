@@ -3,12 +3,22 @@ from dataclasses import dataclass
 
 @dataclass
 class InputData:
-    key: str
-    name: str
-    duties: list[str]
+    @dataclass
+    class InputEntity:
+        key: str
+        name: str
+        duties: list[str]
+
+    data: list[InputEntity]
+    extra: dict[str, str] = None
 
 
 @dataclass
 class OutputData:
-    name: str
-    duty: str
+    @dataclass
+    class OutputEntity:
+        name: str
+        duty: str
+
+    data: list[list[OutputEntity]]
+    extra: dict[str, str] = None

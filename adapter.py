@@ -15,16 +15,16 @@ class Adapter:
         self.input_file = os.path.join(INPUT_DIR, filename)
         self.output_file = os.path.join(OUTPUT_DIR, filename)
 
-    def get_input(self) -> list[InputData]:
+    def get_input(self) -> InputData:
         raise NotImplementedError
 
-    def save_output(self, data: list[list[OutputData]]):
+    def save_output(self, data: OutputData):
         raise NotImplementedError
 
 
 class QQBotInputAdapter(Adapter):
 
-    def get_input(self) -> list[InputData]:
+    def get_input(self) -> InputData:
         import pandas as pd
         df = pd.read_csv(self.input_file)
         data = []
@@ -34,14 +34,15 @@ class QQBotInputAdapter(Adapter):
             duties = [df.iloc[i]['主选职能']]
             if not pd.isna(df.iloc[i]['次选职能']):
                 duties.append(df.iloc[i]['次选职能'])
-            data.append(InputData(key, name, duties))
-        return data
+            data.append(InputData.InputEntity(key, name, duties))
+        return InputData(data)
 
 
 class DefaultOutputAdapter(Adapter):
 
-    def save_output(self, data: list[list[OutputData]]):
+    def save_output(self, data: OutputData):
         import pandas as pd
+        data = data.data
         output = []
         for d in data:
             output.append([x.name for x in d])
